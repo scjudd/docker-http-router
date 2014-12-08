@@ -22,9 +22,9 @@ EOF
 gen_config() {
     echo "server { listen 80; }"
 
-    for VHOST in $($ROOT_CMD/router | jq '.node.nodes[].key' | sed 's/"//g'); do
-        BACKEND=$($ROOT_CMD$VHOST/backend | jq '.node.value' | sed 's/"//g')
-        SERVER_NAME=$($ROOT_CMD$VHOST/server_name | jq '.node.value' | sed 's/"//g')
+    for VHOST in $($ROOT_CMD/router | jq -r '.node.nodes[].key'); do
+        BACKEND=$($ROOT_CMD$VHOST/backend | jq -r '.node.value')
+        SERVER_NAME=$($ROOT_CMD$VHOST/server_name | jq -r '.node.value')
         if [[ "$BACKEND" != "" && "$SERVER_NAME" != "" ]]; then
             echo "$PARTIAL" | sed -e "s;%SERVER_NAME%;$SERVER_NAME;g" -e "s;%BACKEND%;$BACKEND;g"
         fi
